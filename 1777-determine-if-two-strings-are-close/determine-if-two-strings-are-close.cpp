@@ -5,32 +5,43 @@ public:
             return false;
         }
 
-        std::unordered_set<char> set1(word1.begin(), word1.end());
-        std::unordered_set<char> set2(word2.begin(), word2.end());
-        if (set1 != set2) {
-            return false;
-        }
+        // Array to store frequency of characters in word1 and word2
+        int freq1[26] = {0};
+        int freq2[26] = {0};
+        
+        // Array to store presence of characters in word1 and word2
+        bool hasChar1[26] = {0};
+        bool hasChar2[26] = {0};
 
-        std::unordered_map<char, int> freq1;
-        std::unordered_map<char, int> freq2;
+        // Count frequencies and track presence of characters
         for (char c : word1) {
-            freq1[c]++;
+            freq1[c - 'a']++;
+            hasChar1[c - 'a'] = true;
         }
         for (char c : word2) {
-            freq2[c]++;
+            freq2[c - 'a']++;
+            hasChar2[c - 'a'] = true;
         }
 
-        std::vector<int> freqCounts1;
-        std::vector<int> freqCounts2;
-        for (const auto& pair : freq1) {
-            freqCounts1.push_back(pair.second);
+        // Compare character presence
+        for (int i = 0; i < 26; ++i) {
+            if (hasChar1[i] != hasChar2[i]) {
+                return false;
+            }
         }
-        for (const auto& pair : freq2) {
-            freqCounts2.push_back(pair.second);
-        }
-        std::sort(freqCounts1.begin(), freqCounts1.end());
-        std::sort(freqCounts2.begin(), freqCounts2.end());
 
-        return freqCounts1 == freqCounts2;
+        // Collect frequencies into vectors and sort them
+        std::vector<int> freqList1, freqList2;
+        for (int i = 0; i < 26; ++i) {
+            if (freq1[i] > 0) freqList1.push_back(freq1[i]);
+            if (freq2[i] > 0) freqList2.push_back(freq2[i]);
+        }
+        
+        // Sort frequency lists
+        std::sort(freqList1.begin(), freqList1.end());
+        std::sort(freqList2.begin(), freqList2.end());
+
+        // Compare sorted frequency lists
+        return freqList1 == freqList2;
     }
 };
